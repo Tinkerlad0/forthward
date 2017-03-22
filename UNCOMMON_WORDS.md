@@ -53,3 +53,12 @@ All of the words I write will be documented here in order to keep a history and 
 
 Note that you will need to have numbers on the floating point stack instead of the integer stack here.
 
+## Fancy Printing
+
+### Binary Representation
+
+This expects a binary number on the stack and will print a string where, 1 is a star and 0 is a space.
+Note: you need to declare a variable 'L' prior to usign this.
+```
+: line ( b1 -- ) L !  6 0 DO L @  2 I ** AND 0> IF 42 EMIT ELSE SPACE THEN LOOP R> DROP ;
+```
