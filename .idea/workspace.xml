@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e78425c4-dccd-4e52-a598-32802c0ead3a" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Q_ANSWERS.md" afterPath="$PROJECT_DIR$/Q_ANSWERS.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UNCOMMON_WORDS.md" afterPath="$PROJECT_DIR$/UNCOMMON_WORDS.md" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -23,7 +22,7 @@
           <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
             <state split_layout="SPLIT">
               <first_editor relative-caret-position="800">
-                <caret line="64" column="0" lean-forward="true" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
+                <caret line="64" column="0" lean-forward="false" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
                 <folding />
               </first_editor>
               <second_editor />
@@ -35,8 +34,8 @@
         <entry file="file://$PROJECT_DIR$/Q_ANSWERS.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="-580">
-                <caret line="124" column="172" lean-forward="false" selection-start-line="124" selection-start-column="172" selection-end-line="124" selection-end-column="172" />
+              <first_editor relative-caret-position="0">
+                <caret line="0" column="2" lean-forward="false" selection-start-line="0" selection-start-column="2" selection-end-line="0" selection-end-column="2" />
                 <folding />
               </first_editor>
               <second_editor />
@@ -435,7 +434,7 @@
       <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="800">
-            <caret line="64" column="0" lean-forward="true" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
+            <caret line="64" column="0" lean-forward="false" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
             <folding />
           </first_editor>
           <second_editor />
@@ -445,8 +444,8 @@
     <entry file="file://$PROJECT_DIR$/Q_ANSWERS.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-580">
-            <caret line="124" column="172" lean-forward="false" selection-start-line="124" selection-start-column="172" selection-end-line="124" selection-end-column="172" />
+          <first_editor relative-caret-position="0">
+            <caret line="0" column="2" lean-forward="false" selection-start-line="0" selection-start-column="2" selection-end-line="0" selection-end-column="2" />
             <folding />
           </first_editor>
           <second_editor />

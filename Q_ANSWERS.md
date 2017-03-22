@@ -1,4 +1,4 @@
-#Lab 1 - Intro to Forth and the STM32
+# Lab 1 - Intro to Forth and the STM32
 
 ## Michael Brock - z5056704
 
