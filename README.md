@@ -15,6 +15,24 @@ Forth Hints
  * `nip` - Removes the 2nd to last item on the stack
  * `tuck` - duplicates the 2nd to last item on the stack to the front of the stack
 
+# Radix
+
+ The base you are currenlty operating in is easy to change
+
+ * `decimal` changes to base10
+ * `hex` changes to base16
+ * `binary` changes to base2
+
+ However you can easily change to any base using:
+ ```
+ x BASE !
+ ```
+ Where x is the base you want.
+
+ `BASE` is a variable that holds the current radix.
+
+ Therefore `BASE @' will read the value of BASE onto the stack.
+
 # Working with Files
  * `s" file.fs" included` - Loads file.fs into memory
  * `gforth code.fs tests.fs -e bye` - Load a file and exit if something goes wrong (instead of the command line)
