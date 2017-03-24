@@ -211,3 +211,66 @@ Firstly I store x on the return stack. Two reasons for this, I need to use x mor
 Then I change the order of the stack from `a b c` to `c b a`. This is so as I remove the coefficients from the stack, they are in the correct mathematical order. This is achieved by `-ROT SWAP`.
 Next I duplicate x off the return stack. ^2 is a function I defined earlier to square the top stack item. This is then multiplied by a.
 x is once again retreived and then multiplied by b and then the result added to the previous result before c is finally added. The remaining number on the stack is the result of the quadratic.
+
+## Flashing LEDs
+
+### Required Words:
+
+```
+PortInit \ Initialise Port C with pin 10 as output
+PC10On   \ Turn on pin PC10
+PC10Off  \ Turn off pin PC10
+
+Flash    \ Flash the LED on then off with 200ms delay
+Flashes  \ Flash the LED the number of time determined by TOS
+```
+
+```
+: PortInit ( -- ) $40021018 constant RCC_APB2ENR $40011004 constant GPIOC_CRH $4001100C constant GPIOC_ODR $0010 RCC_APB2ENR ! $0000 GPIOC_ODR W! $44444344 GPIOC_CRH ! DROP DROP DROP ;
+```
+
+```
+: PCPOn ( n1 -- ) GPIOC_ODR @ OR GPIOC_ODR W! ;
+: PC10On ( -- ) $400 PCPOn ;
+```
+
+```
+: PCPOff ( n1 -- ) INVERT GPIOC_ODR AND GPIOC_ODR W! ;
+: PC10Off ( -- ) $400 PCPOff ;   
+```
+
+```
+: Flash ( -- ) PC10On 200 ms PC10Off  200 ms ;
+: Flashes ( n1 -- ) 0 ?DO Flash LOOP ;
+```
+
+### Questions
+
+#### Question 1 : How would you modify the code to use PB1 rather than PC10 to drive the LED?
+
+Firstly the value assigned to RCC_APB2ENR would have to be changed to $8 as opposed to $10 as this would enable Port B instead of Port C.
+Next you would want to define GPIOB_ODR at the address $4001000C and GPIOB_CRL to $4001000
+Lastly the value stored in the GPIOB_CRL will have to change as it is pin specific. In order to use pin 1 the value needing to be stored in this register is $44444443
+
+Lastly the methods for changing to PB1 would look like:
+```
+: PortInit ( -- ) $40021018 constant RCC_APB2ENR $40010004 constant GPIOB_CRL $4001000C constant GPIOB_ODR $0008 RCC_APB2ENR ! $0000 GPIOB_ODR W! $44444443 GPIOB_CRL ! DROP DROP DROP ;
+```
+
+```
+: PBPOn ( n1 -- ) GPIOB_ODR @ OR GPIOB_ODR W! ;
+: PB1On ( -- ) $1 PCPOn ;
+```
+
+```
+: PBPOff ( n1 -- ) INVERT GPIOB_ODR AND GPIOB_ODR W! ;
+: PB1Off ( -- ) $1 PCPOff ;   
+```
+
+#### Question 2 : What would change in your code if you were to drive the LED with the port acting as a sink rather than as a source?
+To sink current effectively the pin should be configured to be an open drain. This is achieved by modifying the PortInit word.
+In order to configure open drain we change the value we are storing in the GPIOB_CRl CNF01 bits to %01 meaning the value we wold write would be $44444447 
+
+#### Question 3 : With the current code, if you had LEDs on both PC9 and PC10, and you went to switch PC10 on or off, the PC9 port would be reset to zero.  How might you change the code to ensure that the settings for one port did not influence the existing settings for others
+
+Well I appear to have beaten the questions here..... My code will only affect individual pins when changing pin state. 
