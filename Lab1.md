@@ -204,7 +204,7 @@ Lastly we can simply print the word ADD by using the following:
 
 #### Explanation
 
-First up the ** word will take two words off the stack and return to the stack NOS^TOS. This is achieved by looping for TOS times, and each loop, multiplying NOS by itself. (Note when I say NOS and TOS I refer to at the start of the operation, not during)
+First up the ** word will take two numbers off the stack and return to the stack NOS^TOS. This is achieved by looping for TOS times, and each loop, multiplying NOS by itself. (Note when I say NOS and TOS I refer to at the start of the operation, not during)
 
 I then decalre a Variable `L` in order to use in `LINE` to store the binary number that `LINE` is working on. The reason I use a variable here is that the return stack is in use with the loop, and it is more convenient to be off of the main stack.
 
