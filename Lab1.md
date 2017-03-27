@@ -184,11 +184,37 @@ Make an array Letters that contains binary encoded data for 6x6-element letters 
 This is my solution to the problem, I would be very happy to see better solutions.
 
 ```
-: ** ( n N -- n^N ) 1 swap 0 ?do over * loop nip ; \ Convenient word for exponentials
-Variable L \ Need to define this for the line word which will be defined next.
-: line ( b1 -- ) L !  6 0 DO L @  2 I ** AND 0> IF 42 EMIT ELSE SPACE THEN LOOP ; \ Will print a row of stars representing a binary string
+: ** ( n N -- n^N ) 1 swap 0 ?do over * loop nip ;
+VARIABLE L
+: LINE ( b1 -- ) L !  6 0 DO L @  2 I ** AND 0> IF 42 EMIT ELSE SPACE THEN LOOP CR ;
 ```
 
+We can then define words for printing differents letters.
+```
+: starA ( -- ) %100001 %100001 %111111 %100001 %010010 %001100 CR %110 0 DO LINE LOOP CR ;
+: starB ( -- ) %111111 %100001 %011111 %100001 %100001 %111111 CR %110 0 DO LINE LOOP CR ;
+: starC ( -- ) %111100 %000010 %000001 %000001 %000010 %111100 CR %110 0 DO LINE LOOP CR ;
+: starD ( -- ) %001111 %010001 %100001 %100001 %010001 %001111 CR %110 0 DO LINE LOOP CR ;
+: starE ( -- ) %011111 %000001 %000001 %000111 %000001 %011111 CR %110 0 DO LINE LOOP CR ;
+```
+Lastly we can simply print the word ADD by using the following:
+```
+: starADD1 ( -- ) starA starD starD ;
+```
+
+#### Explanation
+
+First up the ** word will take two words off the stack and return to the stack NOS^TOS. This is achieved by looping for TOS times, and each loop, multiplying NOS by itself. (Note when I say NOS and TOS I refer to at the start of the operation, not during)
+
+I then decalre a Variable `L` in order to use in `LINE` to store the binary number that `LINE` is working on. The reason I use a variable here is that the return stack is in use with the loop, and it is more convenient to be off of the main stack.
+
+`LINE` expects a number on the stack, which it will read the 6 least significant bits of in binary and output a string representation, where 1 results in a `*` char, and 0 results in a space.
+Iterating over the bits is achieved by looping from 0 to 6. Each iteration `I` is updated to the value that the loop is currently cycling in. By using `2 I **` we can create avalue where the only bit set to 1 is the bit we are interested in looking at.
+Then by using the logical `AND` with the given binary number (retreived from L) and checking if the result is greater than 0, we are effectively checking if the bit is set to one or zero.
+If one we can print a `*`, else we can print a space and then continue on looping.
+
+Each of the starX words simply put the correct numbers on the stack and calls the `LINE` word repeatedly as required.
+The final piece in this puzzle was the `starADD` word which merely calls `starA` `starD` `starD`.
 
 ### Question 8:
 
@@ -216,14 +242,15 @@ x is once again retreived and then multiplied by b and then the result added to 
 
 ### Required Words:
 
-```
-PortInit \ Initialise Port C with pin 10 as output
-PC10On   \ Turn on pin PC10
-PC10Off  \ Turn off pin PC10
 
-Flash    \ Flash the LED on then off with 200ms delay
-Flashes  \ Flash the LED the number of time determined by TOS
-```
+* PortInit \ Initialise Port C with pin 10 as output
+* PC10On   \ Turn on pin PC10
+* PC10Off  \ Turn off pin PC10
+
+* Flash    \ Flash the LED on then off with 200ms delay
+* Flashes  \ Flash the LED the number of time determined by TOS
+
+So lets define the contents of these words
 
 ```
 : PortInit ( -- ) $40021018 constant RCC_APB2ENR $40011004 constant GPIOC_CRH $4001100C constant GPIOC_ODR $0010 RCC_APB2ENR ! $0000 GPIOC_ODR W! $44444344 GPIOC_CRH ! DROP DROP DROP ;
@@ -241,10 +268,21 @@ Flashes  \ Flash the LED the number of time determined by TOS
 
 ```
 : Flash ( -- ) PC10On 200 ms PC10Off  200 ms ;
-: Flashes ( n1 -- ) 0 ?DO Flash LOOP ;
+: Flashes ( n1 -- ) ABS 0 ?DO Flash LOOP ;
 ```
 
 ### Questions
+
+#### Sub Questions:
+
+##### What is the value you would need to write?
+In order to simply turn the LED off without bothering about what any other pin is doing, then simply writing $0 to GPIOC_ODR will turn off the LED.
+However this is not effective in the long term, as it will turn off all other pins on port C as well. My code below does not face this issue.
+
+##### What happens if you type -5 Flashes?
+
+In the given code this will flash for a very long time, as it would start at 0, counting up 1 for each loop cycle. It will stop when the counter overflows positive into negative numbers adn eventually counts up to -5.
+This is avoided in my code as I have an ABS funcrion which will automatically make the result positive. NOted that the overflow could be intended in order to achieve longer loops.
 
 #### Question 1 : How would you modify the code to use PB1 rather than PC10 to drive the LED?
 
@@ -273,4 +311,6 @@ In order to configure open drain we change the value we are storing in the GPIOB
 
 #### Question 3 : With the current code, if you had LEDs on both PC9 and PC10, and you went to switch PC10 on or off, the PC9 port would be reset to zero.  How might you change the code to ensure that the settings for one port did not influence the existing settings for others
 
-Well I appear to have beaten the questions here..... My code will only affect individual pins when changing pin state. 
+Well I appear to have beaten the questions here..... My code will only affect individual pins when changing pin state.
+The original code writes a value directly to the ODR which will replace the existing vlaue. This will modify all of the pins on the port, whereas in my code only the pin I am interested in will be modified.
+ This is because I read in the original state of the
