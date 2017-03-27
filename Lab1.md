@@ -206,7 +206,7 @@ Lastly we can simply print the word ADD by using the following:
 
 First up the ** word will take two numbers off the stack and return to the stack NOS^TOS. This is achieved by looping for TOS times, and each loop, multiplying NOS by itself. (Note when I say NOS and TOS I refer to at the start of the operation, not during)
 
-I then decalre a Variable `L` in order to use in `LINE` to store the binary number that `LINE` is working on. The reason I use a variable here is that the return stack is in use with the loop, and it is more convenient to be off of the main stack.
+I then declare a Variable `L` in order to use in `LINE` to store the binary number that `LINE` is working on. The reason I use a variable here is that the return stack is in use with the loop, and it is more convenient to be off of the main stack.
 
 `LINE` expects a number on the stack, which it will read the 6 least significant bits of in binary and output a string representation, where 1 results in a `*` char, and 0 results in a space.
 Iterating over the bits is achieved by looping from 0 to 6. Each iteration `I` is updated to the value that the loop is currently cycling in. By using `2 I **` we can create avalue where the only bit set to 1 is the bit we are interested in looking at.
@@ -270,6 +270,24 @@ So lets define the contents of these words
 : Flash ( -- ) PC10On 200 ms PC10Off  200 ms ;
 : Flashes ( n1 -- ) ABS 0 ?DO Flash LOOP ;
 ```
+
+#### Explanation
+
+Looking at `PortInit`; the first thing I am doing is defining constants to store the register addresses for the relevant registers on the STM32F103 IC.
+Next `$0010` is stroed in the `RCC_APB2ENR` which will enable port C on the chip. Then `$0000` is stored in `GPIOC_ODR` in order to ensure that ll pins are off prior to enabling the clock on the port.
+This is not necessary, however more of good practice. Finally `$44444344` is stored in `GPIOC_CRH`. This configures pin `PC10` as a 50MHz capable output which will act as a push/pull. All other pins on port c are left in their reset state as analog inputs.
+
+`PCPOn` expects a number on the stack which has bits set to one which correspond to the bits in the ODR that specify the pins you want to turn on. In order to not affect any other pins, the existing state is read by fetching the `GPIOC_ODR` value and bitwise OR'ing the two numbers.
+This means that for every bit (pin), if it was already set(ON) OR is desired to be set then the result will be that the bit is set. If the pin was not set and not desired to be set, then it will remain unset (off).
+`PC10On` merely puts $0400 on the stack, which corresponds to the correct value to set for pin 10; then calls PCPOn.
+
+`PCPOff` expects a number on the stack which in binary has the bits set to one for all the pins you wish to turn off. This value is inverted so that the bits to remain unaffected are 1 and the bits to turn off are 0.
+When `AND`'ed with the value fetched from `GPIOC_ODR` this the fetched bits which are 0 as 0, however every bit which is one will only remain one if the corresponding bit in the inverted given number, is 1.
+Therefore every bit which was 1 in the original number on the stack, will be guarenteed to be 0 in the result. Every bit that was 0 in the original number on the stack will be unchanged after this word finishes.
+`PC10Off` simply passes a value with the bit set for pin 10 to `PCPOff`
+
+`Flash` is a word that will turn on pin PC10, delay for 200ms, turn off PC10, then delay for another 200ms.
+`Flashes` will call `Flash` in a loop, running for the number of times specified by the absolute value of the number on the stack.
 
 ### Questions
 
