@@ -91,7 +91,8 @@ Normally I would take into account the speed that I2C could transfer the data ou
 Together 76 cycles when running at 3.4MHz is only 0.02 ms worth of communication time per sample. For 128 total samples this is approximately 2.9ms of communication per second, making the I2C communication time insignificant.
 
 If you calculate the maximum theoretical samples that the chip can achieve by using the time taken to sample you can theoretically get up to ```(1000 - 4.5) / 7.5 = 132 samples per second``` maximum.
-However it clearly states on page 11 of the datasheet "All modes can be performed at higher speeds, e.g. up to 128 times per second for standard mode"
+However it clearly states on page 11 of the datasheet "All modes can be performed at higher speeds, e.g. up to 128 times per second for standard mode". As such I will be taking the max number of samples as 128 per second.
+Given that once per second a temperature reading must be taken to accurately compensate for temperature interfering and modifying the pressure reading this means there is a maximum of 127 pressure samples per second.-
 
 ### Question 4
 Despite the question referring to using port B, I used port C as this port is broken out in full on the external headers, whilst port B is only partially on the headers.
